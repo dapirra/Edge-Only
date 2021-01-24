@@ -38,4 +38,8 @@ void Render(Surface dst, Surface src, Rectangle rect)
             dst[x,y] = CurrentPixel;
         }
     }
+
+    #if DEBUG
+    Debug.WriteLine(DateTime.Now + " - Done");
+    #endif
 }
