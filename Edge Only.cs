@@ -24,7 +24,6 @@ void Render(Surface dst, Surface src, Rectangle rect)
             bool EraseCurrentPixel = true;
 
             foreach(ColorBgra Pixel in Pixels) {
-                //if (Pixel.R != 0 || Pixel.G != 0|| Pixel.B != 0) {
                 if (Pixel.A < 255) {
                     EraseCurrentPixel = false;
                     break;
