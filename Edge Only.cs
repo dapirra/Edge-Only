@@ -8,7 +8,7 @@ void Render(Surface dst, Surface src, Rectangle rect)
         for (int x = rect.Left; x < rect.Right; x++)
         {
             // Avoid edges of selection
-            if (x == 0 || y == 0 || x == rect.Right - 1 || y == rect.Bottom - 1) continue;
+            if (x == 0 || y == 0 || x == src.Width - 1 || y == src.Height - 1) continue;
 
             CurrentPixel = src[x, y];
             TopPixel = src[x, y - 1];
