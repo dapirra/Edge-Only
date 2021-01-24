@@ -32,9 +32,8 @@ void Render(Surface dst, Surface src, Rectangle rect)
 
             if (EraseCurrentPixel) {
                 CurrentPixel.A = 0;
+                dst[x,y] = CurrentPixel;
             }
-
-            dst[x,y] = CurrentPixel;
         }
     }
 
