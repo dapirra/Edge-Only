@@ -1,15 +1,22 @@
+#region UICode
+IntSliderControl area = 0; // [0,100] Area
+#endregion
+
 void Render(Surface dst, Surface src, Rectangle rect) {
+    ColorBgra CurrentPixel;
     for (int y = rect.Top; y < rect.Bottom; y++) {
         if (IsCancelRequested) return;
         for (int x = rect.Left; x < rect.Right; x++) {
-            // Avoid edges of the image
-            if (x == 0 || y == 0 || x == src.Width - 1 || y == src.Height - 1)
-                continue;
-
             if (ApplyEffect(src, x, y)) {
-                ColorBgra CurrentPixel = src[x, y];
-                CurrentPixel.A = 0;
-                dst[x, y] = CurrentPixel;
+                CurrentPixel = src[x, y];
+                dst[x, y] = ColorBgra.FromBgra(
+                    CurrentPixel.B,
+                    CurrentPixel.G,
+                    CurrentPixel.R,
+                    0
+                );
+            } else {
+                dst[x, y] = src[x, y];
             }
         }
     }
@@ -19,37 +26,35 @@ void Render(Surface dst, Surface src, Rectangle rect) {
     #endif
 }
 
-bool ApplyEffect(Surface src, int x, int y) {
-    ColorBgra
-        CurrentPixel = src[x, y],
-        TopPixel = src[x, y - 1],
-        BottomPixel = src[x, y - 1],
-        LeftPixel = src[x - 1, y],
-        RightPixel = src[x + 1, y],
-        TopLeftPixel = src[x - 1, y - 1],
-        TopRightPixel = src[x + 1, y - 1],
-        BottomLeftPixel = src[x - 1, y + 1],
-        BottomRightPixel = src[x + 1, y + 1];
+bool ApplyEffect(Surface src, int CurrentX, int CurrentY) {
+    ColorBgra CurrentPixel = src[CurrentX, CurrentY];
+    // Debug.WriteLine(CurrentX + "|" + CurrentY + "----------");
 
-    ColorBgra[] Pixels = {
-        TopPixel,
-        BottomPixel,
-        LeftPixel,
-        RightPixel,
-        TopLeftPixel,
-        TopRightPixel,
-        BottomLeftPixel,
-        BottomRightPixel
-    };
+    if (CurrentPixel.A == 0) {
+        return false;
+    }
 
-    bool EraseCurrentPixel = true;
-
-    foreach(ColorBgra Pixel in Pixels) {
-        if (Pixel.A < 255) {
-            EraseCurrentPixel = false;
-            break;
+    int GridSize = 3 + area * 2;
+    int GridArea = GridSize * GridSize;
+    int StartingX = CurrentX - (1 + area);
+    int StartingY = CurrentY - (1 + area);
+    for (int Y = StartingY; Y < StartingY + GridSize; Y++) {
+        for (int X = StartingX; X < StartingX + GridSize; X++) {
+            if (IsCancelRequested) return false;
+            // Debug.WriteLine(X + "|" + Y);
+            try {
+                CurrentPixel = src[X, Y];
+                if (CurrentPixel.A < 255) {
+                    return false;
+                }
+            } catch (Exception ex) {
+                #if DEBUG
+                Debug.WriteLine("Error: " + X + "|" + Y);
+                #endif
+                continue;
+            }
         }
     }
 
-    return EraseCurrentPixel;
+    return true;
 }
