@@ -46,10 +46,7 @@ bool ApplyEffect(Surface src, int CurrentX, int CurrentY) {
                     return false;
                 }
             } catch (Exception ex) {
-                #if DEBUG
-                Debug.WriteLine("Error: " + X + "|" + Y);
-                #endif
-                continue;
+                return false;
             }
         }
     }
