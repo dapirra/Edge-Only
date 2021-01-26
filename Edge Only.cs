@@ -28,7 +28,6 @@ void Render(Surface dst, Surface src, Rectangle rect) {
 
 bool ApplyEffect(Surface src, int CurrentX, int CurrentY) {
     ColorBgra CurrentPixel = src[CurrentX, CurrentY];
-    // Debug.WriteLine(CurrentX + "|" + CurrentY + "----------");
 
     if (CurrentPixel.A == 0) {
         return false;
@@ -41,7 +40,6 @@ bool ApplyEffect(Surface src, int CurrentX, int CurrentY) {
     for (int Y = StartingY; Y < StartingY + GridSize; Y++) {
         for (int X = StartingX; X < StartingX + GridSize; X++) {
             if (IsCancelRequested) return false;
-            // Debug.WriteLine(X + "|" + Y);
             try {
                 CurrentPixel = src[X, Y];
                 if (CurrentPixel.A < 255) {
