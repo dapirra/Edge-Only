@@ -48,8 +48,8 @@ bool ApplyEffect(Surface src, int CurrentX, int CurrentY) {
     int StartingX = CurrentX - (1 + area);
     int StartingY = CurrentY - (1 + area);
     for (int Y = StartingY; Y < StartingY + GridSize; Y++) {
+        if (IsCancelRequested) return false;
         for (int X = StartingX; X < StartingX + GridSize; X++) {
-            if (IsCancelRequested) return false;
             try {
                 CurrentPixel = src[X, Y];
                 if (CurrentPixel.A < 255) {
