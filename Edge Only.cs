@@ -2,7 +2,7 @@
 // Submenu: Object
 // Author: David Pirraglia
 // Title: Edge Only
-// Version: 1
+// Version: 1.1
 // Desc: This plugin deletes the inside of an object, leaving only the edge.
 // Keywords:
 // URL: https://dapirra.github.io/edge_only_plugin/
