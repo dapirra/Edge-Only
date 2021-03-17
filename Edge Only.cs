@@ -2,7 +2,7 @@
 // Submenu: Object
 // Author: David Pirraglia
 // Title: Edge Only
-// Version: 1.1
+// Version: 1.2
 // Desc: This plugin deletes the inside of an object, leaving only the edge.
 // Keywords:
 // URL: https://dapirra.github.io/edge_only_plugin/
@@ -17,9 +17,9 @@ void Render(Surface dst, Surface src, Rectangle rect) {
     for (int y = rect.Top; y < rect.Bottom; y++) {
         if (IsCancelRequested) return;
         for (int x = rect.Left; x < rect.Right; x++) {
-            if (ApplyEffect(src, x, y)) {
+            if (isErasingPixel(src, x, y)) {
                 CurrentPixel = src[x, y];
-                dst[x, y] = ColorBgra.FromBgra(
+                dst[x, y] = ColorBgra.FromBgra( // Erase the pixel
                     CurrentPixel.B,
                     CurrentPixel.G,
                     CurrentPixel.R,
@@ -36,10 +36,11 @@ void Render(Surface dst, Surface src, Rectangle rect) {
     #endif
 }
 
-bool ApplyEffect(Surface src, int CurrentX, int CurrentY) {
+// Checks the neighboring pixels to determine if the pixel should be erased
+bool isErasingPixel(Surface src, int CurrentX, int CurrentY) {
     ColorBgra CurrentPixel = src[CurrentX, CurrentY];
 
-    if (CurrentPixel.A == 0) {
+    if (CurrentPixel.A == 0) { // Pixel is already transparent
         return false;
     }
 
@@ -47,15 +48,17 @@ bool ApplyEffect(Surface src, int CurrentX, int CurrentY) {
     int GridArea = GridSize * GridSize;
     int StartingX = CurrentX - thickness;
     int StartingY = CurrentY - thickness;
+
     for (int Y = StartingY; Y < StartingY + GridSize; Y++) {
         if (IsCancelRequested) return false;
         for (int X = StartingX; X < StartingX + GridSize; X++) {
             try {
                 CurrentPixel = src[X, Y];
+                // If neighboring pixel is transparent or partially transparent...
                 if (CurrentPixel.A < 255) {
                     return false;
                 }
-            } catch (Exception ex) {
+            } catch (Exception ex) { // Must be out of bounds
                 return false;
             }
         }
