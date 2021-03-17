@@ -9,7 +9,7 @@
 // Help: This plugin deletes the inside of an object, leaving only the edge.
 
 #region UICode
-IntSliderControl area = 0; // [0,100] Area
+IntSliderControl thickness = 1; // [1,100] Thickness
 #endregion
 
 void Render(Surface dst, Surface src, Rectangle rect) {
@@ -43,10 +43,10 @@ bool ApplyEffect(Surface src, int CurrentX, int CurrentY) {
         return false;
     }
 
-    int GridSize = 3 + area * 2;
+    int GridSize = 3 + (thickness - 1) * 2;
     int GridArea = GridSize * GridSize;
-    int StartingX = CurrentX - (1 + area);
-    int StartingY = CurrentY - (1 + area);
+    int StartingX = CurrentX - thickness;
+    int StartingY = CurrentY - thickness;
     for (int Y = StartingY; Y < StartingY + GridSize; Y++) {
         if (IsCancelRequested) return false;
         for (int X = StartingX; X < StartingX + GridSize; X++) {
